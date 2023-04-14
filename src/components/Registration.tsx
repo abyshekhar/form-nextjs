@@ -1,5 +1,4 @@
 "use client";
-import { type } from "os";
 import React, { FormEvent, useEffect, useState } from "react";
 
 const initialFormData = {
@@ -17,20 +16,23 @@ const errorMessage: ErrorMessage = {
 function Registration() {
   const [formData, setFormData] = useState(initialFormData);
   const [errorMessages, setErrorMessages] = useState(errorMessage);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setFormData((previousState) => ({
-      ...previousState,
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value,
-    }));
+    });
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     setErrorMessages(validate(formData));
   };
-  const handleOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    setErrorMessages(validate(formData));
-  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessages(validate(formData));
   };
+  
   const validate = (formValues: any) => {
     let error: ErrorMessage = {
       first: "",
@@ -39,7 +41,7 @@ function Registration() {
     console.log(formValues);
     if (!formValues.first) {
       error.first = "Firstname is required";
-    }else if(formValues.first.length <10){
+    } else if (formValues.first.length < 10) {
       error.first = "Firstname should be minimum 10 characters.";
     } else {
       error.first = "";
@@ -51,7 +53,6 @@ function Registration() {
     }
     return error;
   };
-  useEffect(() => {}, [errorMessages]);
   return (
     <div className="p-2 w-1/2">
       <h1 className="mx-1 mb-5 text-yellow-900 text-2xl font-semibold">
@@ -66,7 +67,8 @@ function Registration() {
         </label>
         <input
           onChange={handleChange}
-          onBlur={handleOnBlur}
+          onBlur={handleBlur}
+          value={formData.first}
           type="text"
           name="first"
           id="first"
@@ -78,7 +80,8 @@ function Registration() {
         </label>
         <input
           onChange={handleChange}
-          onBlur={handleOnBlur}
+          onBlur={handleBlur}
+          value={formData.last}
           type="text"
           name="last"
           id="last"
